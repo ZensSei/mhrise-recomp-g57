@@ -42,6 +42,9 @@ jobs:
       - name: Build APK
         env:
           LUA_LAB: '1'
+          RELEASE: '1'
+          PACKAGE: com.antutu.ABenchMark
+          LABEL: MH Rise port (antutu)
         run: bash tools/build_apk.sh
       - uses: actions/upload-artifact@v4
         with:
