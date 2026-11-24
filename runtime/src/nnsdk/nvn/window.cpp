@@ -353,7 +353,7 @@ constexpr size_t kRateSetter = 0x78a0ea0;  // set_ImageQualityRate: adrp/ldr del
 constexpr uint32_t kRateSetterCode[3] = {0x90058588, 0xF9429D08, 0xBD1A7900};
 constexpr size_t kRateLoad = 0x7936e20;  // ldr s1, [x8, #0x1a78] en la actualización de RenderOutput
 constexpr uint32_t kRateLoadCode = 0xBD5A7901;
-constexpr float kRates[] = {1.0f, 0.93334f, 0.86667f, 0.80001f, 0.73334f};  // un poco por encima: floor no pierde un píxel
+constexpr float kRates[] = {1.0f, 0.93334f, 0.86667f, 0.80001f, 0.73334f, 0.66668f, 0.60001f, 0.53335f, 0.50001f};  // un poco por encima: floor no pierde un píxel
 constexpr int kLevels = static_cast<int>(std::size(kRates));
 
 // La base elegida: el ratio sobre 960x540 y las líneas, para el log
@@ -375,7 +375,7 @@ BaseResolution base_resolution() {
 }
 
 struct DynamicResolution {
-    int level = 0;
+    int level = kLevels - 1;
     int since_change = 1000;  // frames de GPU desde el último cambio
     int64_t samples[90] = {};
     int count = 0, next = 0;
@@ -409,7 +409,7 @@ void dynamic_resolution(int64_t period_ns) {
     if (!rate) return;
     const float now = *rate;
     if (now < 0.2f) {  // cargando (0,1): es del juego; al acabar pone 1,0 y se vuelve a empezar desde arriba
-        d.level = 0;
+        d.level = kLevels - 1;
         d.count = d.next = 0;
         d.since_change = 1000;
         return;
